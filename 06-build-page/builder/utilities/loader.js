@@ -10,17 +10,18 @@ module.exports = class Loader {
     return this.cover();
   }
   readFile(writeFunc) {
-    return this.getSize().then((size) => {
+    this.promise = this.getSize().then((size) => {
       if (size < this.chunkSize) {
-        this.promise = fs.promises.readFile(this.path);
-        this.promise.then(writeFunc, rej => {throw rej})
+        const prom =  fs.promises.readFile(this.path);
+        prom.then(writeFunc)
+        return prom
       } else {
         this.stream = fs.createReadStream(this.path, {highWaterMark: this.chunkSize})
         if (writeFunc) {this.stream.on('data',writeFunc)}
-        this.promise = new Promise((res) => this.stream.on('end', res))
+        return new Promise((res) => this.stream.on('end', res))
       }
-      return this.cover();
     })
+    return this.cover();
   }
   readDir(writeFunc) {
     this.promise = fs.promises.readdir(this.path);
