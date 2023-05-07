@@ -14,8 +14,8 @@ module.exports = class CssPlugin {
     const files = await loadComp(this.input)
 
     let bundle = '';
-    Object.entries(files).forEach((file) => {
-      bundle += `\n/*  ${file[0]}  */\n`
+    Object.entries(files).forEach((file, i) => {
+      bundle += `${i>0?'\n':''}/*  ${file[0]}  */\n`
       bundle += file[1]
     })
 
