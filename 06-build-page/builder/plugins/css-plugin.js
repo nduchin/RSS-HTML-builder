@@ -1,20 +1,10 @@
-const path = require('path');
 const Loader = require('../utilities/loader');
+const loadComp = require('../utilities/load-comp');
 
-async function loadComp(sourcePath) {
-  const components = {};
-  let names = [];
-  await new Loader(sourcePath).readDir((data) => names=data).untilResolve();
-
-  await Promise.all(names.map((name) => {
-    let data = '';
-    return new Loader(path.join(sourcePath, name)).readFile((chunk)=>data+=chunk).then(()=>{
-      components[path.parse(name).name] = data;
-    }).untilResolve()
-  }));
-  return components;
-}
-
+/**
+ * @param {String} sourcePath 
+ * @returns {Promise}
+ */
 module.exports = class CssPlugin {
   constructor(options) {
     this.input = options.input;
