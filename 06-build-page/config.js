@@ -1,19 +1,26 @@
 const path = require('path');
 const HtmlPlugin = require('./builder/plugins/html-plugin');
 const CssPlugin = require('./builder/plugins/css-plugin');
+const CopyPlugin = require('./builder/plugins/copy-plugin');
 
-const output = path.join(__dirname, 'dist')
+
+const outputPath = path.join(__dirname, 'dist')
 const config = {
-  output: output,
+  output: outputPath,
   plugins: [
     new HtmlPlugin({
       template: path.join(__dirname, 'template.html'),
       components: path.join(__dirname, 'components'),
-      output: path.join(output, 'index.html'),
+      output: path.join(outputPath, 'index.html'),
     }),
     new CssPlugin({
       input: path.join(__dirname, 'styles'),
-      output: path.join(output, 'bundle.css')
+      output: path.join(outputPath, 'bundle.css')
+    }),
+    new CopyPlugin({
+      input: path.join(__dirname, 'assets'),
+      output: path.join(outputPath, 'assets'),
+      recursive: true,
     })
   ]
 }
