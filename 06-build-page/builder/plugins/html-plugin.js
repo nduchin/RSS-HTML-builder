@@ -38,7 +38,7 @@ module.exports = class HtmlPlugin {
       promiseComponents = Promise.resolve({})
     }
 
-    await Promise.all([l0.untilResolve(),promiseComponents])
+    await l0.untilResolve()
 
     Object.entries(await promiseComponents).forEach((comp) => {
       templateData = templateData.replace(`{{${comp[0]}}}`,comp[1])
