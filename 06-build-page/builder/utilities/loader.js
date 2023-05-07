@@ -48,12 +48,8 @@ module.exports = class Loader {
     this.promise = fs.promises.mkdir(this.path, options);
     return this.cover();
   }
-  rm() {
-    this.promise = fs.promises.rm(this.path);
-    return this.cover();
-  }
-  rmDir() {
-    this.promise = fs.promises.rmdir(this.path);
+  rm(options) {
+    this.promise = fs.promises.rm(this.path, options);
     return this.cover();
   }
   getSize() {
