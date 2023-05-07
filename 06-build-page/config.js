@@ -4,7 +4,7 @@ const CssPlugin = require('./builder/plugins/css-plugin');
 const CopyPlugin = require('./builder/plugins/copy-plugin');
 
 
-const outputPath = path.join(__dirname, 'dist')
+const outputPath = path.join(__dirname, 'project-dist')
 const config = {
   output: outputPath,
   plugins: [
@@ -15,7 +15,7 @@ const config = {
     }),
     new CssPlugin({
       input: path.join(__dirname, 'styles'),
-      output: path.join(outputPath, 'bundle.css')
+      output: path.join(outputPath, 'style.css')
     }),
     new CopyPlugin({
       input: path.join(__dirname, 'assets'),
