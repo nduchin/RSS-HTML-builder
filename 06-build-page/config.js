@@ -7,6 +7,7 @@ const CopyPlugin = require('./builder/plugins/copy-plugin');
 const outputPath = path.join(__dirname, 'project-dist')
 const config = {
   output: outputPath,
+  clear: true,
   plugins: [
     new HtmlPlugin({
       template: path.join(__dirname, 'template.html'),
