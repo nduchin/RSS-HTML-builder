@@ -57,7 +57,10 @@ module.exports = class Loader {
     return this;
   }
   untilResolve(untilFunc) {
-    if (!this.promise) {return new Error('loader isn\'t initialized')}
+    if (!this.promise) {
+      console.error('loader isn\'t initialized')
+      return Promise.reject()
+    }
     if (untilFunc) {
       return new Promise((resolve, reject) => {this.promise.then(()=>untilFunc(resolve,reject))})
     } else {
