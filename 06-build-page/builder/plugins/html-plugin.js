@@ -16,7 +16,7 @@ module.exports = class HtmlPlugin {
 
     let promiseComponents;
     if (this.path.components) {
-      promiseComponents = loadComp(this.path.components)
+      promiseComponents = loadComp(this.path.components,'.html')
     } else {
       promiseComponents = Promise.resolve({})
     }

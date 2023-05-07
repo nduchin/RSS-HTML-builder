@@ -11,7 +11,7 @@ module.exports = class CssPlugin {
     this.output = options.output;
   }
   async run() {
-    const files = await loadComp(this.input)
+    const files = await loadComp(this.input, '.css')
 
     let bundle = '';
     Object.entries(files).forEach((file, i) => {
