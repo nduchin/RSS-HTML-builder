@@ -23,6 +23,12 @@ module.exports = class Loader {
     })
     return this.cover();
   }
+  readStream(writeFunc) {
+    this.stream = fs.createReadStream(this.path, {highWaterMark: this.chunkSize});
+    if (writeFunc) {this.stream.on('data',writeFunc)}
+    this.promise = new Promise((res) => this.stream.on('end', res))
+    return this.cover()
+  }
   readDir(writeFunc) {
     this.promise = fs.promises.readdir(this.path,{withFileTypes: true});
     this.promise.then(writeFunc, rej => {throw rej})
@@ -31,6 +37,12 @@ module.exports = class Loader {
   writeFile(data) {
     this.promise = fs.promises.writeFile(this.path, data ?? '');
     return this.cover();
+  }
+  writeStream(data) {
+    this.stream = fs.createWriteStream(this.path)
+    if (data) {this.stream.write(data)};
+    this.promise = Promise.resolve();
+    return this.cover()
   }
   mkDir(options) {
     this.promise = fs.promises.mkdir(this.path, options);
@@ -70,11 +82,9 @@ module.exports = class Loader {
   static pipe(sourcePath, targetPath, chunkSize = 65536) {
     const l0 = new Loader(sourcePath, chunkSize)
     const l1 = new Loader(targetPath)
-    return new Promise((res) => {
-      let data;
-    l0.readFile((chunk)=>data+=chunk)
-    l0.then(()=>l1.writeFile(data))
-    l1.then(res)
-    })
+    l1.writeStream();
+    l0.readStream();
+    l0.stream.pipe(l1.stream)
+    return l0.untilResolve()
   }
 }
