@@ -19,7 +19,6 @@ module.exports = class CssPlugin {
       bundle += file[1]
     })
 
-    await new Loader(this.output).writeFile(bundle).untilResolve();
-    console.log('css done')
+    return new Loader(this.output).writeFile(bundle).untilResolve();
   }
 }

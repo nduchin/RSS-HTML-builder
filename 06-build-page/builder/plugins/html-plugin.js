@@ -27,8 +27,6 @@ module.exports = class HtmlPlugin {
       templateData = templateData.replace(`{{${comp[0]}}}`,comp[1])
     })
 
-    await new Loader(this.output).writeFile(templateData).untilResolve();
-    console.log('html done')
-
+    return new Loader(this.output).writeFile(templateData).untilResolve();
   }
 }

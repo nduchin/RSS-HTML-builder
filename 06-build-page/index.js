@@ -10,15 +10,10 @@ const config = require(path.join(__dirname, 'config.js'))
 async function builder({ output = __dirname, plugins = [] /*, clean = false*/}) {
   await new Loader(output).mkDir({recursive: true}).untilResolve()
   console.log('dir done')
-  // TODO: cleaner
-  // plugins
-  plugins.forEach((plugin) => {
-    plugin.run()
-  })
 
-  // done
+  await Promise.all(plugins.map((plugin) => {plugin.run()}))
 
-
+  console.log('build complete')
 }
 
 builder(config)

@@ -5,8 +5,6 @@ module.exports = class CopyPlugin {
     Object.assign(this, options)
   }
   async run() {
-    console.log('copy start')
-    await duplicateDir(this.input, this.output, {recursive:this.recursive, chunkSize:this.chunkSize})
-    console.log('copy done')
+    return duplicateDir(this.input, this.output, {recursive:this.recursive, chunkSize:this.chunkSize})
   }
 }
