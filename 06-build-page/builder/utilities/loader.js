@@ -70,9 +70,11 @@ module.exports = class Loader {
   static pipe(sourcePath, targetPath, chunkSize = 65536) {
     const l0 = new Loader(sourcePath, chunkSize)
     const l1 = new Loader(targetPath)
-    let data;
+    return new Promise((res) => {
+      let data;
     l0.readFile((chunk)=>data+=chunk)
-    l0.then = (()=>l1.writeFile(data))
-    return l1;
+    l0.then(()=>l1.writeFile(data))
+    l1.then(res)
+    })
   }
 }
