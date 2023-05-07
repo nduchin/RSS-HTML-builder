@@ -1,5 +1,5 @@
 const path = require('path');
-const fs = require('fs');
+const Loader = require('./builder/utilities/loader');
 const config = require(path.join(__dirname, 'builder', 'config.js'))
 
 // TODO: main package-manager
@@ -8,13 +8,8 @@ const config = require(path.join(__dirname, 'builder', 'config.js'))
  * @param {Object} config object
  */
 async function builder({ output = __dirname,/* plugins = [] , clean = false*/}) {
-  await fs.promises.mkdir(output).then(()=>{console.log('create dir')}).catch((err)=> {
-    if (err.code === 'EEXIST') {
-      console.log('dir already exists');
-    } else {
-      throw err;
-    }
-  });
+  await new Loader(output).mkDir({recursive: true}).untilResolve((res)=>setTimeout(()=>{res()},5000))
+  console.log('dir done')
   // plugins
   // done
 }

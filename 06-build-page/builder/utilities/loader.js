@@ -7,7 +7,7 @@ module.exports = class Loader {
   }
   resolve(func) {
     this.promise = new Promise(func);
-    this.cover();
+    return this.cover();
   }
   readFile(writeFunc) {
     return this.getSize().then((size) => {
@@ -19,29 +19,29 @@ module.exports = class Loader {
         if (writeFunc) {this.stream.on('data',writeFunc)}
         this.promise = new Promise((res) => this.stream.on('end', res))
       }
-      this.cover();
+      return this.cover();
     })
   }
   readDir(writeFunc) {
     this.promise = fs.promises.readdir(this.path);
     this.promise.then(writeFunc, rej => {throw rej})
-    this.cover();
+    return this.cover();
   }
   writeFile(data) {
     this.promise = fs.promises.writeFile(this.path, data ?? '');
-    this.cover();
+    return this.cover();
   }
-  mkDir() {
-    this.promise = fs.promises.mkdir(this.path);
-    this.cover();
+  mkDir(options) {
+    this.promise = fs.promises.mkdir(this.path, options);
+    return this.cover();
   }
   rm() {
     this.promise = fs.promises.rm(this.path);
-    this.cover();
+    return this.cover();
   }
   rmDir() {
     this.promise = fs.promises.rmdir(this.path);
-    this.cover();
+    return this.cover();
   }
   getSize() {
     return fs.promises.stat(this.path).then((stat)=>stat.size);
@@ -50,10 +50,18 @@ module.exports = class Loader {
     if (this.thenFunc) {this.promise.then(this.thenFunc)}
     return this;
   }
-  set then(func) {
+  then(func) {
     this.thenFunc = func;
     if (this.promise) {this.promise.then(this.thenFunc)}
-    return;
+    return this;
+  }
+  untilResolve(untilFunc) {
+    if (!this.promise) {return new Error('loader isn\'t initialized')}
+    if (untilFunc) {
+      return new Promise((resolve, reject) => {this.promise.then(()=>untilFunc(resolve,reject))})
+    } else {
+      return this.promise ?? new Error('loader isn\'t initialized')
+    }
   }
   static pipe(sourcePath, targetPath, chunkSize = 65536) {
     const l0 = new Loader(sourcePath, chunkSize)
