@@ -24,7 +24,7 @@ module.exports = class Loader {
     return this.cover();
   }
   readDir(writeFunc) {
-    this.promise = fs.promises.readdir(this.path);
+    this.promise = fs.promises.readdir(this.path,{withFileTypes: true});
     this.promise.then(writeFunc, rej => {throw rej})
     return this.cover();
   }
