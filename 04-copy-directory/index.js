@@ -6,26 +6,17 @@ const path = require('path')
  * @returns {Promise}
  */
 async function copyDir (sourcePath, targetPath) {
-  const { readdir, mkdir, readFile, writeFile } = require('fs/promises');
-  async function duplicateFile (sourceDir, fileName, targetDir) {
-    return readFile(path.join(sourceDir, fileName)).then((data) => {
-      return writeFile(path.join(targetDir, fileName), data);
-    }).then(()=>{ console.log(`write file ${fileName}`) })
-  }
-  return readdir(sourcePath).then(async (files) => {
-    await mkdir(targetPath).then(()=>{console.log(`create dir ${targetPath}`)}).catch((err)=> {
-      if (err.code === 'EEXIST') {
-        console.log(`dir ${targetPath} already exists`)
-      } else {
-        throw err
-      }
-    });
-    return files;
-  }).then((files) => {
-    return Promise.all(files.map((fileName)=>{
-      duplicateFile(sourcePath, fileName, targetPath)
-    }))
-  })
+  const fs = require('fs');
+  let files = [];
+  const pr0 = fs.promises.readdir(sourcePath, {withFileTypes: true}).then(dirents => files = dirents.filter(dirent => dirent.isFile()).map(dirent => dirent.name))
+  const pr1 = fs.promises.mkdir(targetPath, {recursive: true})
+  await Promise.all([pr0, pr1])
+  return Promise.all(files.map(fileName => {
+    const readStream = fs.createReadStream(path.join(sourcePath, fileName));
+    const writeStream = fs.createWriteStream(path.join(targetPath, fileName));
+    readStream.pipe(writeStream)
+    return new Promise(res => readStream.on('end', res))
+  }))
 }
 
 const sourcePath = path.join(__dirname, 'files');
