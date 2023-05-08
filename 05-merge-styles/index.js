@@ -21,10 +21,9 @@ async function inject(sourceDir, writeStream) {
 async function injectSeq(dirs, writeStream) {
   dirs.reduce((req, dir) => {
     return req.then(()=>{
-      console.log(`Init injecting ${dir}`)
       return inject(dir, writeStream)
     })
-  }, Promise.resolve().then(()=>console.log('complete'),(e)=>{throw e}))
+  }, Promise.resolve().catch((e)=>{throw e}))
 }
 
 function injectFromTo(sourceName, targetName) {
