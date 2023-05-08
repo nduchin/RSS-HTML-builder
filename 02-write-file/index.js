@@ -14,5 +14,5 @@ function appendFile(data) {
 stdout.write('Input text\n');
 stdin.on('data', appendFile);
 
-process.on('exit', () => stdout.write('exiting programm\n'));
+process.on('exit', () => stdout.write('exiting program\n'));
 process.on('SIGINT', () => { stdout.write('force '); exit(); });
