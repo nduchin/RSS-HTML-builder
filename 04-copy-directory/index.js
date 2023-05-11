@@ -21,5 +21,5 @@ async function copyDir (sourcePath, targetPath) {
 }
 
 const sourcePath = path.join(__dirname, 'files');
-const targetPath = path.join(__dirname, 'new-files');
+const targetPath = path.join(__dirname, 'files-copy');
 copyDir(sourcePath, targetPath).then(() => console.log('duplication complete!'), (err) => {console.log('duplication failed!'); throw err});
