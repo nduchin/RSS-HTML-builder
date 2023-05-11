@@ -52,7 +52,7 @@ class Loader {
     return this.cover();
   }
   writeFile(data) {
-    this.promise = fs.promises.writeFile(this.path, data ?? '');
+    this.promise = fs.promises.writeFile(this.path, data ? data : '');
     return this.cover();
   }
   writeStream(data) {
@@ -89,7 +89,7 @@ class Loader {
     if (untilFunc) {
       return new Promise((resolve, reject) => {this.promise.then(()=>untilFunc(resolve,reject))})
     } else {
-      return this.promise ?? new Error('loader isn\'t initialized')
+      return this.promise ? this.promise : new Error('loader isn\'t initialized')
     }
   }
   static pipe(sourcePath, targetPath, chunkSize = 65536) {
